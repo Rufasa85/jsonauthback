@@ -48,6 +48,7 @@ router.post("/",(req,res)=>{
                 id:req.body.tank
             }
         }).then(tank=>{
+            
             if(tank.UserId===userData.id){
                 db.Fish.create({
                     name:req.body.name,
@@ -70,6 +71,33 @@ router.post("/",(req,res)=>{
         })
         
     }
+})
+
+router.delete("/:id",(req,res)=>{
+    const userData = authenticateMe(req);
+    db.Fish.findOne({
+        where:{
+            id:req.params.id
+        }
+    }).then(fish=>{
+        if(fish.UserId===userData.id){
+            db.Fish.destroy({
+                where:{
+                    id:req.params.id
+                }
+            }).then(delFish=>{
+                res.json(delFish)
+            }).catch(err=>{
+                console.log(err)
+                res.status(500).json(err)
+            })
+        }else {
+            res.status(403).send("not your fish")
+        }
+    }).catch(err=>{
+        console.log(err);
+        res.status(500).json(err)
+    })
 })
 
 module.exports = router;

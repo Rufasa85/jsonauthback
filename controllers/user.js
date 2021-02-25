@@ -79,6 +79,25 @@ router.post('/login', (req, res) => {
     })
 })
 
+router.get("/user/:id/tanks/fishes",(req,res)=>{
+    let userData = authenticateMe(req);
+    db.User.findOne({
+        where:{
+            id:req.params.id,
+        },
+        include:[db.Fish,{
+            model:db.Tank,
+            include:[db.Fish]
+        }]
+    }).then(user=>{
+        res.json({
+            name:user.name,
+            Fishes:user.Fishes,
+            Tanks:user.Tanks,
+            isMyPage:userData&&userData.id===user.id
+        })
+    })
+})
 
 router.get('/secretclub', (req, res) => {
 

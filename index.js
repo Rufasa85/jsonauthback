@@ -12,7 +12,13 @@ var db = require('./models');
 // Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors())
+
+//DEVELOPMENT
+// app.use(cors())
+//PRODUCTION
+app.use(cors({
+    origin:["https://nov2020fishfront.herokuapp.com"]
+}))
 
 
 const userRoutes = require("./controllers/user");
